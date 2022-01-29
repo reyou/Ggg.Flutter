@@ -11,13 +11,6 @@ class _ChooseLocationState extends State<ChooseLocation> {
   int counter = 0;
 
   @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    print("initState function run");
-  }
-
-  @override
   Widget build(BuildContext context) {
     print("build function run");
     return Scaffold(
