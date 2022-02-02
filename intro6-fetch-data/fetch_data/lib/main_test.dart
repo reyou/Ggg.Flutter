@@ -9,7 +9,7 @@ import 'main_test.mocks.dart';
 
 @GenerateMocks([http.Client])
 void main() {
-  test('qqq', () async {
+  test('main tests', () async {
     final client = MockClient();
 
     // Use Mockito to return a successful response when it calls the
