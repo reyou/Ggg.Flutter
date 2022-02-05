@@ -1,80 +1,71 @@
 import 'package:flutter/material.dart';
 
+class Product {
+  const Product({required this.name});
+
+  final String name;
+}
+
+typedef CartChangedCallback = Function(Product product, bool inCart);
+
+class ShoppingListItem extends StatelessWidget {
+  ShoppingListItem({
+    required this.product,
+    required this.inCart,
+    required this.onCartChanged,
+  }) : super(key: ObjectKey(product));
+
+  final Product product;
+  final bool inCart;
+  final CartChangedCallback onCartChanged;
+
+  Color _getColor(BuildContext context) {
+    // The theme depends on the BuildContext because different
+    // parts of the tree can have different themes.
+    // The BuildContext indicates where the build is
+    // taking place and therefore which theme to use.
+
+    return inCart //
+        ? Colors.black54
+        : Theme.of(context).primaryColor;
+  }
+
+  TextStyle? _getTextStyle(BuildContext context) {
+    if (!inCart) return null;
+
+    return const TextStyle(
+      color: Colors.black54,
+      decoration: TextDecoration.lineThrough,
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      onTap: () {
+        onCartChanged(product, inCart);
+      },
+      leading: CircleAvatar(
+        backgroundColor: _getColor(context),
+        child: Text(product.name[0]),
+      ),
+      title: Text(product.name, style: _getTextStyle(context)),
+    );
+  }
+}
+
 void main() {
   runApp(
-    const MaterialApp(
-      title: 'My app', // used by the OS task switcher
-      home: SafeArea(
-        child: MyScaffold(),
+    MaterialApp(
+      home: Scaffold(
+        body: Center(
+          child: ShoppingListItem(
+            product: const Product(name: 'Chips'),
+            inCart: true,
+            onCartChanged: (product, inCart) {},
+          ),
+        ),
       ),
     ),
   );
 }
-
-class MyScaffold extends StatelessWidget {
-  const MyScaffold({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Material(
-      // Column is a vertical, linear layout.
-      child: Column(
-        children: [
-          MyAppBar(
-            title: Text(
-              'Example title',
-              style: Theme.of(context) //
-                  .primaryTextTheme
-                  .headline6,
-            ),
-          ),
-          const Expanded(
-            child: Center(
-              child: Text('Hello, world!'),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class MyAppBar extends StatelessWidget {
-  final Widget title;
-  const MyAppBar({required this.title, Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 56.0, // in logical pixels
-      padding: const EdgeInsets.symmetric(horizontal: 8.0),
-      decoration: BoxDecoration(color: Colors.blue[500]),
-      // Row is a horizontal, linear layout.
-      child: Row(
-        // <Widget> is the type of items in the list.
-        children: [
-          const IconButton(
-            icon: Icon(Icons.menu),
-            tooltip: 'Navigation menu',
-            onPressed: null, // null disables the button
-          ),
-          // Expanded expands its child
-          // to fill the available space.
-          Expanded(
-            child: title,
-          ),
-          const IconButton(
-            icon: Icon(Icons.search),
-            tooltip: 'Search',
-            onPressed: null,
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-
-
-
-
